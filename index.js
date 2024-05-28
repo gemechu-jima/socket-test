@@ -18,6 +18,8 @@ let users=[]
 io.on("connection", (socket)=>{
   
     const id=socket.id
+    socket.emit("users", users)
+
     socket.on("score", (data)=>{
       console.log("data :", data)
       if(data.name && data.score){
@@ -27,16 +29,29 @@ io.on("connection", (socket)=>{
        io.emit('users', users);
       }
      })
-     socket.emit("users", users)
-
      socket.on("delete",(id)=>{
       let currentIndex=users.findIndex(ur=>ur?.id===id)
-  
       if(currentIndex!==-1){
         users.splice(currentIndex, 1)
         console.log('User deleted:', id);
         io.emit('users', users);
       }
+     })
+     socket.on("update", (data)=>{
+      console.log("data to update", data)
+      if(data.id && (data.name || data.score!==undefined)){
+      let currentIndex=users.findIndex((user)=>user.id===data.id)
+       if(currentIndex!==-1){
+        users[currentIndex]={...users[currentIndex], ...data}
+        console.log("update user", users[currentIndex])
+        io.emit("users", users)
+       }
+      }
+    })
+     socket.on("disconnect", ()=>{
+      users=users.filter(user=>user.id!==id)
+      console.log("disconnect", id)
+      io.emit("users", users)
      })
 })
 httpServer.listen(4000, () => {

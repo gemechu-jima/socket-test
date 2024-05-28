@@ -29,8 +29,11 @@ function App() {
       setUsers(users);
     });
   };
-  const handleUpdate=(data)=>{
-
+  const handleUpdate=(ev)=>{
+    ev.preventDefault()
+     socket.emit("update", data)
+     console.log(data)
+     setIsEdit(false)
   }
   const handleDelete=(id)=>{
     console.log(id)
@@ -64,7 +67,7 @@ function App() {
          { isEdit ? "Update " :"Add new"}
         </button>
       </form>
-      <table>
+     { users.length>0 ? <table>
         <tbody>
           <tr>
             <th>No</th>
@@ -84,6 +87,7 @@ function App() {
           )) }   
         </tbody>
       </table>
+      :<></>}
     </div>
   );
 }
