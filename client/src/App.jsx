@@ -19,7 +19,7 @@ function App() {
   };
   const handleOnSubmit = (ev) => {
     ev.preventDefault();
-    console.log("som .....");
+    if(!data.name && !data.score) return ;
     socket.emit("score", data);
     setData({
       name:"",
@@ -34,6 +34,7 @@ function App() {
      socket.emit("update", data)
      console.log(data)
      setIsEdit(false)
+     setData({name:"", score:""})
   }
   const handleDelete=(id)=>{
     console.log(id)
