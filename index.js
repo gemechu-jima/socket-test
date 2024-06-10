@@ -38,7 +38,7 @@ io.on("connection", (socket)=>{
       }
      })
      socket.on("update", (data)=>{
-      console.log("data to update", data)
+     
       if(data.id && (data.name || data.score!==undefined)){
       let currentIndex=users.findIndex((user)=>user.id===data.id)
        if(currentIndex!==-1){
@@ -48,11 +48,15 @@ io.on("connection", (socket)=>{
        }
       }
     })
-     socket.on("disconnect", ()=>{
-      users=users.filter(user=>user.id!==id)
-      console.log("disconnect", id)
-      io.emit("users", users)
-     })
+    //  socket.on("disconnect", ()=>{
+    //   users=users.filter(user=>user.id!==id)
+    //   console.log("disconnect", id)
+    //   io.emit("users", users)
+    //  })
+    socket.on("name", ()=>{
+      console.log("Gemechu Jima")
+      io.emit("myname","Gemechu Jima")
+    })
 })
 httpServer.listen(4000, () => {
   console.log('server running at http://localhost:4000');

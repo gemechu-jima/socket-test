@@ -9,7 +9,11 @@ function App() {
   });
   const [users, setUsers] = useState([]);
   const [isEdit, setIsEdit]=useState(false)
+  const [name, setname]
   const socket = io("http://localhost:4000/");
+  socket.on("connection", (socket) => {
+    console.log("connected to socket io");
+  });
   const handleOnChange = (ev) => {
     const { name, value } = ev.target;
     setData((prev) => ({
@@ -32,22 +36,32 @@ function App() {
   const handleUpdate=(ev)=>{
     ev.preventDefault()
      socket.emit("update", data)
-     console.log(data)
+     socket.on("users", (users) => {
+      setUsers(users);
+    });
      setIsEdit(false)
      setData({name:"", score:""})
   }
   const handleDelete=(id)=>{
-    console.log(id)
+    
     socket.emit("delete", id)
   }
-  useEffect(() => {
-    socket.on("connection", (socket) => {
-      console.log("connected");
-    });
+  useEffect(() => { 
     socket.on("users", (users) => {
       setUsers(users);
     });
   }, [data]);
+
+  //Test chat
+  
+  const handleName=()=>{
+    socket.emit("name")
+    socket.on("myname",(data)=>{
+      console.log(data)
+      name=data
+    })
+  }
+  console.log("name", name)
   return (
     <div>
       <h1> Web Socket Test</h1>
@@ -89,6 +103,34 @@ function App() {
         </tbody>
       </table>
       :<></>}
+      <div>
+        <h2>please ask me what you want from the list below only</h2>
+        <h2> I real chat to Help You here</h2>
+        <div>
+          <button onClick={handleName}>Your Name</button>
+          <p>{name}</p>
+        </div>
+        <div>
+        <button>How many year Experience</button>
+        <p>{}</p>
+
+        </div>
+        <div>
+        <button>Your Position</button>
+        <p>{}</p>
+
+        </div>
+        <div>
+        <button>Your Phone Number</button>
+        <p>{}</p>
+
+        </div>
+        <div>
+        <button>Your Email Address</button>
+        <p>{}</p>
+
+        </div>
+      </div>
     </div>
   );
 }
